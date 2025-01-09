@@ -1,4 +1,9 @@
+from math import log2
 import sys
+
+def printCabeçalho():
+    print("="*16)
+    print("IDX V ** ADDR **")
 
 def main():
     
@@ -10,6 +15,11 @@ def main():
     # calculando quantas linhas temos
     numLinhas = tamCache // tamLinha
 
+    offsetPalavra = log2(tamLinha)
+
+    printCabeçalho()
+
+    
 
 if __name__ == "__main__":
     main()
