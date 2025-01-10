@@ -1,4 +1,4 @@
-from math import log2
+from math import log2, ceil
 import sys
 
 def printCabeçalho():
@@ -7,11 +7,10 @@ def printCabeçalho():
 
 def main():
     
-
     #leitura dos argumentos
     tamCache = int(sys.argv[1]) # quantas bytes na cache
-    tamLinha = int(sys.argv[2]) # quantos bytes por linha
-    tamGrupo = int(sys.argv[3]) # quantas linhas por grupo
+    tamLinha = int(sys.argv[2]) # quantos bytes por linha(bloco)
+    linhasPorGrupo = int(sys.argv[3]) # quantos blocos(linhas) por grupo
     #leitura do arquivo de entrada
     arquivoEntrada = sys.argv[4]
     with open(arquivoEntrada, 'r') as file:
@@ -19,19 +18,23 @@ def main():
 
     # calculando quantas linhas temos e offsets
     numLinhas = tamCache // tamLinha
+    associatividade = numLinhas // linhasPorGrupo
     offsetPalavra = log2(tamLinha)
-    numGrupos = numLinhas // tamGrupo
-    offsetGrupo = log2(tamGrupo)
+    offsetGrupo = log2(associatividade) # numero de grupos
 
     # obter as palavras de entrada em binário
     palavrasBin = [bin(palavra)[2:].zfill(32) for palavra in palavras]
     print(palavrasBin)
     
     #retirando o offset de palavra e de grupo
-    #TEMOS QUE ANALISAR SE PRECISAMOS GUARDAR OS OFFSETS DE GRUPO
-    #PRA FAZER A CONTA DE QUAL GRUPO COLOCAR A PALAVRA
-    palavrasBin = [palavra[:-int(offsetPalavra + offsetGrupo)].zfill(32) for palavra in palavrasBin]
+    palavrasBin = [palavra[:-int(offsetPalavra)].zfill(32) for palavra in palavrasBin]
+    if offsetGrupo > 0:
+        grupoPorPalavra = [int(palavra[-int(offsetGrupo):], 2) for palavra in palavrasBin]
+        palavrasBin = [palavra[:-int(offsetGrupo)].zfill(32) for palavra in palavrasBin]
+    #palavrasBin = [palavra[:-int(offsetPalavra + offsetGrupo)].zfill(32) for palavra in palavrasBin]
     print(palavrasBin)
+    if offsetGrupo > 0:
+        print(grupoPorPalavra)
 
     #obtendo os identificadores
     addrs = [f"0x{hex(int(palavra, 2))[2:].zfill(8).upper()}" for palavra in palavrasBin]
@@ -40,13 +43,13 @@ def main():
     #vetor do bit de validade para cada linha
     validades = [0] * numLinhas
 
-    
+    #AGORA TEMOS QUE VER A LÓGICA DE PREENCHER AS LINHAS DA SAIDA UMA A UMA E PRINTAR O RESULTADO
 
     #prints de debug
-    print(offsetPalavra)
-    print(numLinhas)
-    for i in range(len(palavras)):
-        print(palavras[i])
+    #print(offsetPalavra)
+    #print(numLinhas)
+    #for i in range(len(palavras)):
+    #    print(palavras[i])
 
     # prints resultados
     for j in range(len(palavras)):
