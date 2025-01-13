@@ -43,8 +43,8 @@ def main():
     #print(addrs)
 
     #matriz do bit de validade para cada linha
-    validades = [[0] * linhasPorGrupo] * associatividade
-    enderecosAlocados = [[-1] * linhasPorGrupo] * associatividade #matriz pra guardar os endereços já presentes na cahce
+    validades = [[0] * linhasPorGrupo for _ in range(associatividade)]
+    enderecosAlocados = [[-1] * linhasPorGrupo for _ in range(associatividade)]  # Matriz para guardar os endereços já presentes na cache
     num_enderecosAlocados = [0] * associatividade #vetor para guardar quant de blocos em cada conjunto
 
     #prints de debug
@@ -63,29 +63,23 @@ def main():
         printCabeçalho()
         achou = False
 
-        for i in range(linhasPorGrupo):
-            #print(f"{i:03d} {validades[i]}")
-            if enderecosAlocados[grupoPorPalavra[j]] == addrs[j]:
-                achou = True
-                hit += 1
-                break
+        # for i in range(linhasPorGrupo):
+        #     #print(f"{i:03d} {validades[i]}")
+        if addrs[j] in enderecosAlocados[grupoPorPalavra[j]]:
+            achou = True
+            hit += 1
+            break
 
-        if achou == False:    
+        if not achou:
             enderecosAlocados[grupoPorPalavra[j]][num_enderecosAlocados[grupoPorPalavra[j]] % associatividade] = addrs[j]
             validades[grupoPorPalavra[j]][num_enderecosAlocados[grupoPorPalavra[j]] % associatividade] = 1
             num_enderecosAlocados[grupoPorPalavra[j]] += 1
             miss += 1
-            # for l in range(numLinhas):
-            #     if enderecosAlocados[l] == -1:
-            #         enderecosAlocados[l] = addrs[j]
-            #         validades[l] = 1
-            #         miss += 1
-            #         break
         
         for i in range(associatividade):
             for j in range(linhasPorGrupo):
                 enderecoLinha = f"{enderecosAlocados[i][j]}" if enderecosAlocados[i][j] != -1 else ""
-                print(f"{i:03d} {validades[i][j]} {enderecoLinha}")
+                print(f"{(associatividade * i) + j:03d} {validades[i][j]} {enderecoLinha}")
             
     print("")                
     print(f"#hits: {hit}")
