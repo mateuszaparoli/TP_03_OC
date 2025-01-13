@@ -68,20 +68,22 @@ def main():
         if addrs[j] in enderecosAlocados[grupoPorPalavra[j]]:
             achou = True
             hit += 1
-            break
 
         if not achou:
-            enderecosAlocados[grupoPorPalavra[j]][num_enderecosAlocados[grupoPorPalavra[j]] % associatividade] = addrs[j]
-            validades[grupoPorPalavra[j]][num_enderecosAlocados[grupoPorPalavra[j]] % associatividade] = 1
-            num_enderecosAlocados[grupoPorPalavra[j]] += 1
+            grupo = grupoPorPalavra[j]
+            enderecosAlocados[grupo][num_enderecosAlocados[grupo] % associatividade] = addrs[j]
+            validades[grupo][num_enderecosAlocados[grupo] % associatividade] = 1
+            num_enderecosAlocados[grupo] += 1
             miss += 1
-        
+
+        k = 0
         for i in range(associatividade):
             for j in range(linhasPorGrupo):
                 enderecoLinha = f"{enderecosAlocados[i][j]}" if enderecosAlocados[i][j] != -1 else ""
-                print(f"{(associatividade * i) + j:03d} {validades[i][j]} {enderecoLinha}")
-            
-    print("")                
+                print(f"{k:03d} {validades[i][j]} {enderecoLinha}")
+                k += 1
+
+    print("")
     print(f"#hits: {hit}")
     print(f"#miss: {miss}")
 
