@@ -34,9 +34,6 @@ def main():
                 grupoPorPalavra[i] = int(palavra[-int(offsetGrupo):], 2)
         palavrasBin = [palavra[:-int(offsetGrupo)].zfill(32) for palavra in palavrasBin]
     #palavrasBin = [palavra[:-int(offsetPalavra + offsetGrupo)].zfill(32) for palavra in palavrasBin]
-    #print(palavrasBin)
-    # if offsetGrupo > 0:
-    #     print(grupoPorPalavra)
 
     #obtendo os identificadores
     addrs = [f"0x{hex(int(palavra, 2))[2:].zfill(8).upper()}" for palavra in palavrasBin]
@@ -63,8 +60,6 @@ def main():
         printCabeçalho()
         achou = False
 
-        # for i in range(linhasPorGrupo):
-        #     #print(f"{i:03d} {validades[i]}")
         if addrs[j] in enderecosAlocados[grupoPorPalavra[j]]:
             achou = True
             hit += 1
@@ -74,16 +69,13 @@ def main():
             enderecosAlocados[grupo][num_enderecosAlocados[grupo] % linhasPorGrupo] = addrs[j]
             validades[grupo][num_enderecosAlocados[grupo] % linhasPorGrupo] = 1
             num_enderecosAlocados[grupo] += 1
-            # print(grupo)
-            # print(num_enderecosAlocados[grupo])
-            # print(num_enderecosAlocados[grupo] % linhasPorGrupo)
             miss += 1
 
         k = 0
         for i in range(associatividade):
-            for j in range(linhasPorGrupo):
-                enderecoLinha = f" {enderecosAlocados[i][j]}" if enderecosAlocados[i][j] != -1 else ""
-                print(f"{k:03d} {validades[i][j]}{enderecoLinha}")
+            for l in range(linhasPorGrupo):
+                enderecoLinha = f" {enderecosAlocados[i][l]}" if enderecosAlocados[i][l] != -1 else ""
+                print(f"{k:03d} {validades[i][l]}{enderecoLinha}")
                 k += 1
 
     print("")
