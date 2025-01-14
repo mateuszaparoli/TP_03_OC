@@ -31,7 +31,7 @@ def main():
     grupoPorPalavra = [0] * len(palavrasBin)
     if offsetGrupo > 0:
         for i, palavra in enumerate(palavrasBin):
-                grupoPorPalavra[i] = int(palavra[-int(offsetGrupo):], 2)
+                grupoPorPalavra[i] = (int(palavra[-int(offsetGrupo):], 2) % associatividade)
         palavrasBin = [palavra[:-int(offsetGrupo)].zfill(32) for palavra in palavrasBin]
     #palavrasBin = [palavra[:-int(offsetPalavra + offsetGrupo)].zfill(32) for palavra in palavrasBin]
 
