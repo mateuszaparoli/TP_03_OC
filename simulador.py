@@ -18,9 +18,12 @@ def main():
 
     # calculando quantas linhas temos e offsets
     numLinhas = tamCache // tamLinha
-    associatividade = numLinhas // linhasPorGrupo
+    associatividade = numLinhas // linhasPorGrupo # aqui é o numero de grupos
     offsetPalavra = log2(tamLinha)
-    offsetGrupo = log2(associatividade) # numero de grupos
+    offsetGrupo = log2(associatividade) # aqui é o numero de bits para identificar o grupo
+    #offsetPalavra = int(log2(tamLinha))  # Número de bits do offset da palavra
+    #offsetGrupo = int(log2(associatividade))  # Número de bits do grupo
+
 
     # obter as palavras de entrada em binário
     palavrasBin = [bin(palavra)[2:].zfill(32) for palavra in palavras]
@@ -29,9 +32,14 @@ def main():
     #retirando o offset de palavra e de grupo
     palavrasBin = [palavra[:-int(offsetPalavra)].zfill(32) for palavra in palavrasBin]
     grupoPorPalavra = [0] * len(palavrasBin)
+    #if associatividade > 1:
+    #    grupoPorPalavra = [int(palavra[-offsetGrupo:], 2) for palavra in palavrasBin]  # Calcular o grupo
+    #    palavrasBin = [palavra[:-offsetGrupo] for palavra in palavrasBin]  # Remover offset de grupo
+    #else:
+    #    grupoPorPalavra = [0] * len(palavrasBin)  # Apenas 1 grupo
     if offsetGrupo > 0:
         for i, palavra in enumerate(palavrasBin):
-                grupoPorPalavra[i] = (int(palavra[-int(offsetGrupo):], 2) % associatividade)
+            grupoPorPalavra[i] = (int(palavra[-int(offsetGrupo):], 2) % associatividade) #Mudei essa linha Ricardo
         palavrasBin = [palavra[:-int(offsetGrupo)].zfill(32) for palavra in palavrasBin]
     #palavrasBin = [palavra[:-int(offsetPalavra + offsetGrupo)].zfill(32) for palavra in palavrasBin]
 
